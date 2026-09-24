@@ -1,4 +1,4 @@
-module vortex
+module Vortex
 
 """
     hello(who::String)
@@ -14,4 +14,4 @@ Return `x + 5`.
 """
 domath(x::Number) = x + 5
 
-end # module vortex
+end # module Vortex

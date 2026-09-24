@@ -1,0 +1,41 @@
+iname: CI
+on:
+  push:
+    branches:
+      - main
+    tags: ['*']
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - 'stable'    # Latest stable release
+          - 'lts'       # Long-term support version
+        os:
+          - ubuntu-latest
+    steps:
+      # 1. Check out the repository code
+      - uses: actions/checkout@v6
+
+      # 2. Set up the Julia environment
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: ${{ matrix.version }}
+
+      # 3. Cache Julia packages, artifacts, and registries to speed up runs
+      - uses: julia-actions/cache@v3
+
+      # 4. Build the Julia package dependencies
+      - uses: julia-actions/julia-buildpkg@v1
+
+      # 5. Run the package test suite (test/runtests.jl)
+      - uses: julia-actions/julia-runtest@v1
