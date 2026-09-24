@@ -1,2 +1,2 @@
 # vortex.jl
-State estimation in Jullia
+State estimation in Julia
